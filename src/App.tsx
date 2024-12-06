@@ -9,7 +9,7 @@ function App() {
   return (
     <>
       <Routes>
-        <Route path="/home" element={<Home />} />
+        <Route path="/" element={<Home />} />
         <Route path="/lobby" element={<GameLobby />} />
         <Route path="/prompt" element={<Prompt />} />
         <Route path="/draw" element={<AnimationTool />} />

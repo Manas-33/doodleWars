@@ -2,8 +2,15 @@ import { Globe, Twitch } from 'lucide-react'
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
+import { useNavigate } from 'react-router-dom'
 
 export default function Home() {
+  const navigate = useNavigate();
+
+  const handleClick = () => {
+    navigate("/lobby")
+  }
+
   return (
     <section className="h-[100vh] bg-[#6441a5] bg-opacity-90 text-white flex flex-col">
       {/* Header */}
@@ -87,6 +94,7 @@ export default function Home() {
                   <Button
                     size="lg"
                     className="w-full bg-white text-purple-700 hover:bg-white/90"
+                    onClick={handleClick}
                   >
                     START
                   </Button>

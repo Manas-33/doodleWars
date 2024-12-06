@@ -3,6 +3,7 @@ import { Button } from "@/components/ui/button"
 import { Slider } from "@/components/ui/slider"
 import { Pencil, Eraser, Undo, Redo } from 'lucide-react';
 import 'canvas-to-blob';
+import Header from '@/components/Header';
 
 interface Frame {
   id: number;
@@ -185,74 +186,73 @@ const stopDrawing = () => {
   ];
 
   return (
-    <div className="flex flex-col items-center bg-gray-100 min-h-screen">
-      <header className="w-full bg-purple-600 p-4 text-center">
-        <h1 className="text-green-400 text-2xl font-bold">Animation Tool</h1>
-      </header>
+    <div className=" bg-[#6441a5] min-h-screen">
+      <Header/>
+      <main className="flex items-center mt-8 w-full max-w-4xl gap-10">
+        <div className='flex flex-col px-10 bg'>
+          <div className="flex justify-center mt-4 space-x-2">
+            {colors.map((c) => (
+              <div
+                key={c}
+                className={`w-8 h-8 rounded-full cursor-pointer ${color === c ? 'ring-2 ring-blue-500' : ''}`}
+                style={{ backgroundColor: c }}
+                onClick={() => setColor(c)}
+              />
+            ))}
+          </div>
 
-      <main className="flex flex-col items-center mt-8 w-full max-w-4xl">
-        <canvas
-          ref={canvasRef}
-          width={500}
-          height={500}
-          className="border border-gray-300 bg-white"
-          onMouseDown={startDrawing}
-          onMouseUp={stopDrawing}
-          onMouseMove={draw}
-          onMouseLeave={stopDrawing}
-        />
+          <div className="flex justify-center mt-4 space-x-2">
+            {tools.map((toolItem) => (
+              <Button
+                key={toolItem.name}
+                variant="outline"
+                size="icon"
+                onClick={toolItem.action}
+                className={tool === toolItem.name ? 'bg-blue-200' : ''}
+              >
+                {toolItem.icon}
+              </Button>
+            ))}
+          </div>
 
-        <div className="flex justify-center mt-4 space-x-2">
-          {colors.map((c) => (
-            <div
-              key={c}
-              className={`w-8 h-8 rounded-full cursor-pointer ${color === c ? 'ring-2 ring-blue-500' : ''}`}
-              style={{ backgroundColor: c }}
-              onClick={() => setColor(c)}
-            />
-          ))}
-        </div>
+          <Slider
+            min={1}
+            max={20}
+            step={1}
+            value={[thickness]}
+            onValueChange={(value) => setThickness(value[0])}
+            className="w-64 mt-4"
+          />
 
-        <div className="flex justify-center mt-4 space-x-2">
-          {tools.map((toolItem) => (
-            <Button
-              key={toolItem.name}
-              variant="outline"
-              size="icon"
-              onClick={toolItem.action}
-              className={tool === toolItem.name ? 'bg-blue-200' : ''}
-            >
-              {toolItem.icon}
+          <div className="flex justify-center mt-4 space-x-2">
+            {frames.map((frame, index) => (
+              <div
+                key={frame.id}
+                className={`w-8 h-8 rounded-full border-2 cursor-pointer ${
+                  index === currentFrame ? 'bg-blue-500' : 'bg-gray-300'
+                }`}
+                onClick={() => switchFrame(index)}
+              />
+            ))}
+            <Button onClick={addNewFrame} variant="outline" size="icon">
+              +
             </Button>
-          ))}
+          </div>
         </div>
-
-        <Slider
-          min={1}
-          max={20}
-          step={1}
-          value={[thickness]}
-          onValueChange={(value) => setThickness(value[0])}
-          className="w-64 mt-4"
-        />
-
-        <div className="flex justify-center mt-4 space-x-2">
-          {frames.map((frame, index) => (
-            <div
-              key={frame.id}
-              className={`w-8 h-8 rounded-full border-2 cursor-pointer ${
-                index === currentFrame ? 'bg-blue-500' : 'bg-gray-300'
-              }`}
-              onClick={() => switchFrame(index)}
+        <div>
+          <canvas
+            ref={canvasRef}
+            width={800}
+            height={600}
+            className="border border-gray-300 bg-white rounded-md"
+            onMouseDown={startDrawing}
+            onMouseUp={stopDrawing}
+            onMouseMove={draw}
+            onMouseLeave={stopDrawing}
             />
-          ))}
-          <Button onClick={addNewFrame} variant="outline" size="icon">
-            +
-          </Button>
+          <Button onClick={saveAsImage} className="mt-4 mr-2">Save Frame</Button>
+          <Button className="mt-4">DONE!</Button>
         </div>
-
-        <Button onClick={saveAsImage} className="mt-4 mr-2">Save Frame</Button>
-        <Button className="mt-4">DONE!</Button>
       </main>
     </div>
   );
