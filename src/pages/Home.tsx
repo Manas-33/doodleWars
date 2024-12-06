@@ -15,7 +15,7 @@ export default function Home() {
 
         <img
           src="/placeholder.svg"
-          alt="Gartic Phone Logo"
+          alt="LOGO Logo"
           width={300}
           height={100}
           className="mx-auto"
