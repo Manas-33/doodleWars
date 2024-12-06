@@ -5,14 +5,14 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 
 export default function Home() {
   return (
-    <div className="min-h-screen bg-[#6441a5] bg-opacity-90 text-white">
+    <section className="h-[100vh] bg-[#6441a5] bg-opacity-90 text-white flex flex-col">
       {/* Header */}
       <header className="p-4 flex justify-between items-center">
         <div className="flex items-center space-x-2 bg-opacity-20 bg-black rounded-full px-4 py-2">
           <Globe className="w-5 h-5" />
           <span>EN</span>
         </div>
-        
+
         <img
           src="/placeholder.svg"
           alt="Gartic Phone Logo"
@@ -20,7 +20,7 @@ export default function Home() {
           height={100}
           className="mx-auto"
         />
-        
+
         <div className="flex items-center gap-2">
           <Twitch className="w-5 h-5" />
           <span className="font-medium">LIVE STREAMERS</span>
@@ -43,10 +43,10 @@ export default function Home() {
       </header>
 
       {/* Main Content */}
-      <main className="container mx-auto px-4 py-8 flex gap-8">
+      <main className="flex-grow container mx-auto px-4 py-8 flex gap-8">
         <div className="flex-grow">
-          <Tabs defaultValue="anonymous" className="w-full">
-            <TabsList className="w-full bg-transparent border-b">
+          <Tabs defaultValue="anonymous" className="w-full ">
+            <TabsList className="w-full bg-transparent border-b bg-purple-800 text-white">
               <TabsTrigger
                 value="anonymous"
                 className="data-[state=active]:bg-purple-700 data-[state=active]:text-white"
@@ -64,7 +64,7 @@ export default function Home() {
               <div className="flex flex-col items-center space-y-8">
                 <div className="relative">
                   <img
-                    src="/placeholder.svg"
+                    src="/"
                     alt="Character Avatar"
                     width={150}
                     height={150}
@@ -139,7 +139,7 @@ export default function Home() {
       </main>
 
       {/* Footer */}
-      <footer className="border-t border-white/20 mt-auto">
+      <footer className="border-t border-white/20">
         <div className="container mx-auto px-4 py-6 flex justify-between items-center">
           <img
             src="/placeholder.svg"
@@ -168,7 +168,7 @@ export default function Home() {
           />
         </div>
       </footer>
-    </div>
-  )
+    </section>
+  );
 }
 
