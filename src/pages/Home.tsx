@@ -1,33 +1,38 @@
-import { Globe, Twitch } from 'lucide-react'
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import { useNavigate } from 'react-router-dom'
+import { Globe, Twitch } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 
 export default function Home() {
+  const [nickname, setNickname] = useState("");
+  const [players, setPlayers] = useState("3");
   const navigate = useNavigate();
 
-  const handleClick = () => {
-    navigate("/lobby")
-  }
-
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    navigate("/lobby", { state: { nickname, players } });
+  };
   return (
-    <section className="h-[100vh] bg-[#6441a5] bg-opacity-90 text-white flex flex-col">
+    <section className="h-[100vh]  bg-[#6B46C1] bg-opacity-90 text-white flex flex-col">
       {/* Header */}
       <header className="p-4 flex justify-between items-center">
-        <div className='flex gap-5 items-center'>
-        <div className="flex items-center space-x-2 bg-opacity-20 bg-black rounded-full px-4 py-2 h-7">
-          <Globe className="w-5 h-5" />
-          <span>EN</span>
-        </div>
-
-        <img
-          src="/logo.png"
-          alt="LOGO Logo"
-          width={300}
-          height={100}
-          className="mx-auto"
-        />
+        <div className="flex gap-5 items-center">
+          <img
+            src="/logo.png"
+            alt="LOGO Logo"
+            width={300}
+            height={100}
+            className="mx-auto"
+          />
         </div>
 
         <div className="flex items-center gap-2">
@@ -86,18 +91,41 @@ export default function Home() {
                     <br />
                     AND A NICKNAME
                   </h2>
-                  <Input
-                    type="text"
-                    placeholder="Enter nickname"
-                    className="bg-white/20 border-none text-white placeholder:text-white/50"
-                  />
-                  <Button
-                    size="lg"
-                    className="w-full bg-white text-purple-700 hover:bg-white/90"
-                    onClick={handleClick}
-                  >
-                    START
-                  </Button>
+                  <form onSubmit={handleSubmit}>
+                    <Input
+                      type="text"
+                      placeholder="Enter nickname"
+                      className="bg-white/20 border-none text-white placeholder:text-white/50"
+                      value={nickname}
+                      onChange={(e) => setNickname(e.target.value)}
+                      required
+                    />
+                    <div className="flex justify-center my-4">
+                      <Select
+                        onValueChange={(value) => setPlayers(value)}
+                        defaultValue={players}
+                      >
+                        <SelectTrigger className="w-[180px]">
+                          <SelectValue placeholder="Players" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="3">3</SelectItem>
+                          <SelectItem value="4">4</SelectItem>
+                          <SelectItem value="5">5</SelectItem>
+                          <SelectItem value="6">6</SelectItem>
+                          <SelectItem value="7">7</SelectItem>
+                          <SelectItem value="8">8</SelectItem>
+                        </SelectContent>
+                      </Select>
+                    </div>
+                    <Button
+                      size="lg"
+                      type="submit"
+                      className="w-full bg-white text-purple-700 hover:bg-white/90"
+                    >
+                      START
+                    </Button>
+                  </form>
                 </div>
               </div>
             </TabsContent>
@@ -136,12 +164,6 @@ export default function Home() {
       {/* Footer */}
       <footer className="border-t border-white/20">
         <div className="container mx-auto px-4 py-6 flex justify-between items-center">
-          <img
-            src="/placeholder.svg"
-            alt="Gartic Logo"
-            width={100}
-            height={40}
-          />
           <div className="flex space-x-6">
             {["TERMS OF SERVICE", "PRIVACY", "ASSETS", "BLOG", "CONTACT"].map(
               (item) => (
@@ -155,15 +177,9 @@ export default function Home() {
               )
             )}
           </div>
-          <img
-            src="/logo.png"
-            alt="Logo"
-            width={100}
-            height={60}
-          />
+          <img src="/logo.png" alt="Logo" width={100} height={60} />
         </div>
       </footer>
     </section>
   );
 }
-
