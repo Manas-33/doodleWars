@@ -3,16 +3,34 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Crown, ArrowLeft, Volume2 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
+import { useState } from "react";
 
 export default function GameLobby() {
   const location = useLocation();
-  const { nickname = "Player1", players = "3" } = location.state || {};
+  const {
+    nickname = "Player1",
+    players = "3",
+    lobbyID = "N/A",
+  } = location.state || {};
   const playerCount = parseInt(players);
   const navigate = useNavigate();
 
+  const [toastVisible, setToastVisible] = useState(false);
+
   const handleBackClick = () => {
-    navigate("/"); 
+    navigate("/");
   };
+
+  const handleCopyClick = async () => {
+    try {
+      await navigator.clipboard.writeText(lobbyID);
+      setToastVisible(true);
+      setTimeout(() => setToastVisible(false), 4000); // Hide the toast after 4 seconds
+    } catch (err) {
+      console.error("Failed to copy text to clipboard", err);
+    }
+  };
+
   return (
     <div className="min-h-screen bg-[#6B46C1] p-4">
       <div className="max-w-6xl mx-auto">
@@ -42,6 +60,8 @@ export default function GameLobby() {
           <Card className="bg-[#4C1D95] w-[50%] p-4 text-white">
             <div className="flex justify-between items-center mb-4">
               <h2 className="text-xl">PLAYERS 1/{playerCount}</h2>
+              {/* Display the Lobby ID */}
+              <h3 className="text-sm text-white/80">LOBBY ID: {lobbyID}</h3>
             </div>
             <div className="space-y-2">
               <div className="flex items-center gap-3 bg-[#5B21B6] p-2 rounded-lg">
@@ -61,15 +81,28 @@ export default function GameLobby() {
             </div>
           </Card>
         </div>
+
         <div className="flex justify-center gap-4 mt-8">
-          <Button className="bg-white text-purple-900 hover:bg-gray-100">
-            INVITE
+          {/* Copy Lobby ID to Clipboard */}
+          <Button
+            className="bg-white text-purple-900 hover:bg-gray-100"
+            onClick={handleCopyClick}
+          >
+            COPY LOBBY ID
           </Button>
+
           <Button className="bg-emerald-500 text-white hover:bg-emerald-600">
             START
           </Button>
         </div>
       </div>
+      {toastVisible && (
+        <div className="fixed bottom-5 left-1/2 transform -translate-x-1/2 bg-green-600 text-white p-6 rounded-lg shadow-lg w-[300px] text-center">
+          <p className="text-xg font-semibold">
+            Lobby ID copied to the clipboard
+          </p>
+        </div>
+      )}
     </div>
   );
 }
