@@ -8,37 +8,24 @@ export default function Home() {
     <section className="h-[100vh] bg-[#6441a5] bg-opacity-90 text-white flex flex-col">
       {/* Header */}
       <header className="p-4 flex justify-between items-center">
-        <div className="flex items-center space-x-2 bg-opacity-20 bg-black rounded-full px-4 py-2">
+        <div className='flex gap-5 items-center'>
+        <div className="flex items-center space-x-2 bg-opacity-20 bg-black rounded-full px-4 py-2 h-7">
           <Globe className="w-5 h-5" />
           <span>EN</span>
         </div>
 
         <img
-          src="/placeholder.svg"
+          src="/logo.png"
           alt="LOGO Logo"
           width={300}
           height={100}
           className="mx-auto"
         />
+        </div>
 
         <div className="flex items-center gap-2">
           <Twitch className="w-5 h-5" />
-          <span className="font-medium">LIVE STREAMERS</span>
-          <div className="flex -space-x-2">
-            {[1, 2, 3, 4, 5].map((i) => (
-              <div
-                key={i}
-                className="w-10 h-10 rounded-full border-2 border-white overflow-hidden"
-              >
-                <img
-                  src="/placeholder.svg"
-                  alt={`Streamer ${i}`}
-                  width={40}
-                  height={40}
-                />
-              </div>
-            ))}
-          </div>
+          <span className="font-medium">CONNECT WALLET</span>
         </div>
       </header>
 
@@ -64,7 +51,7 @@ export default function Home() {
               <div className="flex flex-col items-center space-y-8">
                 <div className="relative">
                   <img
-                    src="/"
+                    src="/photo1.png"
                     alt="Character Avatar"
                     width={150}
                     height={150}
@@ -112,12 +99,12 @@ export default function Home() {
         <div className="w-80 bg-purple-800/50 rounded-lg p-6">
           <h2 className="text-2xl font-bold text-center mb-8">HOW TO PLAY</h2>
           <div className="flex flex-col items-center space-y-4">
-            <div className="flex items-center justify-center w-20 h-20">
+            <div className="flex items-center justify-center w-50 h-50">
               <img
-                src="/placeholder.svg"
+                src="/textual_ref.gif"
                 alt="Write Icon"
-                width={80}
-                height={80}
+                width={100}
+                height={100}
               />
             </div>
             <div className="text-center">
@@ -161,10 +148,10 @@ export default function Home() {
             )}
           </div>
           <img
-            src="/placeholder.svg"
-            alt="Onrizon Logo"
+            src="/logo.png"
+            alt="Logo"
             width={100}
-            height={40}
+            height={60}
           />
         </div>
       </footer>
