@@ -17,12 +17,18 @@ export default function Home() {
   const [players, setPlayers] = useState("3");
   const navigate = useNavigate();
 
+  const generateHexID = () => {
+    return Math.random().toString(16).substring(2, 8).toUpperCase();
+  };
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    navigate("/lobby", { state: { nickname, players } });
+    const hexID = generateHexID();
+    navigate("/lobby", { state: { nickname, players, lobbyID: hexID } });
   };
+
   return (
-    <section className="h-[100vh]  bg-[#6B46C1] bg-opacity-90 text-white flex flex-col">
+    <section className="h-[100vh] bg-[#6B46C1] bg-opacity-90 text-white flex flex-col">
       {/* Header */}
       <header className="p-4 flex justify-between items-center">
         <div className="flex gap-5 items-center">
@@ -44,22 +50,22 @@ export default function Home() {
       {/* Main Content */}
       <main className="flex-grow container mx-auto px-4 py-8 flex gap-8">
         <div className="flex-grow">
-          <Tabs defaultValue="anonymous" className="w-full ">
+          <Tabs defaultValue="start" className="w-full">
             <TabsList className="w-full bg-transparent border-b bg-purple-800 text-white">
               <TabsTrigger
-                value="anonymous"
+                value="start"
                 className="data-[state=active]:bg-purple-700 data-[state=active]:text-white"
               >
-                ANONYMOUS
+                START
               </TabsTrigger>
               <TabsTrigger
-                value="authenticated"
+                value="join"
                 className="data-[state=active]:bg-purple-700 data-[state=active]:text-white"
               >
-                AUTHENTICATED
+                JOIN
               </TabsTrigger>
             </TabsList>
-            <TabsContent value="anonymous" className="mt-8">
+            <TabsContent value="start" className="mt-8">
               <div className="flex flex-col items-center space-y-8">
                 <div className="relative">
                   <img
@@ -124,6 +130,57 @@ export default function Home() {
                       className="w-full bg-white text-purple-700 hover:bg-white/90"
                     >
                       START
+                    </Button>
+                  </form>
+                </div>
+              </div>
+            </TabsContent>
+            <TabsContent value="join" className="mt-8">
+              <div className="flex flex-col items-center space-y-8">
+                <div className="relative">
+                  <img
+                    src="/photo1.png"
+                    alt="Character Avatar"
+                    width={150}
+                    height={150}
+                    className="rounded-full"
+                  />
+                  <button className="absolute bottom-0 right-0 bg-white rounded-full p-2">
+                    <svg
+                      className="w-6 h-6 text-purple-600"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"
+                      />
+                    </svg>
+                  </button>
+                </div>
+                <div className="flex flex-col items-center space-y-8">
+                  <h2 className="text-xl font-bold text-center">
+                    JOIN AN EXISTING GAME
+                  </h2>
+                  <p className="text-white/80">
+                    Enter the session ID provided by the host to join a game.
+                  </p>
+                  <form onSubmit={handleSubmit} className="w-full max-w-md">
+                    <Input
+                      type="text"
+                      placeholder="Enter game code"
+                      className="bg-white/20 border-none text-white placeholder:text-white/50"
+                      required
+                    />
+                    <Button
+                      size="lg"
+                      type="submit"
+                      className="w-full bg-white text-purple-700 hover:bg-white/90 mt-4"
+                    >
+                      JOIN
                     </Button>
                   </form>
                 </div>
