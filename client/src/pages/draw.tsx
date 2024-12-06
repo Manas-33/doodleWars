@@ -186,10 +186,10 @@ const stopDrawing = () => {
   ];
 
   return (
-    <div className=" bg-[#6441a5] min-h-screen">
+    <div className="bg-[#6441a5] min-h-screen">
       <Header/>
-      <main className="flex items-center mt-8 w-full max-w-4xl gap-10">
-        <div className='flex flex-col px-10 bg'>
+      <main className="flex items-center w-full max-w-4xl gap-10 px-10">
+        <div className='flex flex-col px-10 bg-purple-800/50 h-[75vh] rounded-md'>
           <div className="flex justify-center mt-4 space-x-2">
             {colors.map((c) => (
               <div
@@ -239,19 +239,19 @@ const stopDrawing = () => {
             </Button>
           </div>
         </div>
-        <div>
+        <div className='mt-10 '>
           <canvas
             ref={canvasRef}
             width={800}
             height={600}
-            className="border border-gray-300 bg-white rounded-md"
+            className="bg-white rounded-md border-4 border-black"
             onMouseDown={startDrawing}
             onMouseUp={stopDrawing}
             onMouseMove={draw}
             onMouseLeave={stopDrawing}
             />
-          <Button onClick={saveAsImage} className="mt-4 mr-2">Save Frame</Button>
-          <Button className="mt-4">DONE!</Button>
+          <Button onClick={saveAsImage} className="mt-4 bg-white text-purple-700 hover:bg-white/90">Submit</Button>
+          {/* <Button className="w-full bg-white text-purple-700 hover:bg-white/90">DONE!</Button> */}
         </div>
       </main>
     </div>

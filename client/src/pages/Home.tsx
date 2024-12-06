@@ -11,6 +11,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import Slider from "@/components/Slider";
 
 export default function Home() {
   const [nickname, setNickname] = useState("");
@@ -189,33 +190,7 @@ export default function Home() {
           </Tabs>
         </div>
 
-        <div className="w-80 bg-purple-800/50 rounded-lg p-6">
-          <h2 className="text-2xl font-bold text-center mb-8">HOW TO PLAY</h2>
-          <div className="flex flex-col items-center space-y-4">
-            <div className="flex items-center justify-center w-50 h-50">
-              <img
-                src="/textual_ref.gif"
-                alt="Write Icon"
-                width={100}
-                height={100}
-              />
-            </div>
-            <div className="text-center">
-              <h3 className="text-xl font-bold mb-2">2. TIME TO WRITE</h3>
-              <p>Each player must write a quirky sentence</p>
-            </div>
-            <div className="flex space-x-2 mt-4">
-              {[1, 2, 3, 4, 5, 6].map((i) => (
-                <div
-                  key={i}
-                  className={`w-3 h-3 rounded-full ${
-                    i === 2 ? "bg-white" : "bg-white/30"
-                  }`}
-                />
-              ))}
-            </div>
-          </div>
-        </div>
+        <Slider/>
       </main>
 
       {/* Footer */}
