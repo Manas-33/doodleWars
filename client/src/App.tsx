@@ -7,6 +7,7 @@ import AnimationTool from './pages/draw';
 import VoteGrid from './pages/Voting';
 import ResultsPage from './pages/Results';
 import { OktoProvider, BuildType } from 'okto-sdk-react';
+import Results2 from './pages/Results2';
 
 
 function App() {
@@ -20,7 +21,7 @@ function App() {
         <Route path="/prompt" element={<Prompt />} />
         <Route path="/draw" element={<AnimationTool />} />
         <Route path="/vote" element={<VoteGrid />} />
-        <Route path="/standings" element={<ResultsPage />} />
+        <Route path="/standings" element={<Results2 />} />
       </Routes>
       </OktoProvider>
     </>

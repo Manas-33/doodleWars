@@ -1,58 +1,79 @@
-import { useState } from "react"
-// import { motion } from "framer-motion"
-import { Check, RefreshCw } from 'lucide-react'
-import { Button } from "@/components/ui/button"
-import { Card } from "@/components/ui/card"
-import Header from "@/components/Header"
-// import { useToast } from "@/components/ui/use-toast"
+import { useState } from "react";
+import { Check, RefreshCw } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Card } from "@/components/ui/card";
+import Header from "@/components/Header";
+import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 interface Drawing {
-  id: string
-  imageUrl: string
-  artistName: string
+  id: string;
+  imageUrl: string;
+  nickname: string;
 }
 
-// Mock data - replace with actual data in a real application
 const mockDrawings: Drawing[] = [
-  { id: "1", imageUrl: "/placeholder.svg?height=300&width=300", artistName: "Artist 1" },
-  { id: "2", imageUrl: "/placeholder.svg?height=300&width=300", artistName: "Artist 2" },
-  { id: "3", imageUrl: "/placeholder.svg?height=300&width=300", artistName: "Artist 3" },
-  { id: "4", imageUrl: "/placeholder.svg?height=300&width=300", artistName: "Artist 4" },
-  { id: "5", imageUrl: "/placeholder.svg?height=300&width=300", artistName: "Artist 5" },
-  { id: "6", imageUrl: "/placeholder.svg?height=300&width=300", artistName: "Artist 6" },
-]
+  { id: "1", imageUrl: "/placeholder.svg?height=300&width=300", nickname: "Divesh" },
+  { id: "2", imageUrl: "/placeholder.svg?height=300&width=300", nickname: "Manas" },
+  { id: "3", imageUrl: "/placeholder.svg?height=300&width=300", nickname: "Aditya" },
+  { id: "4", imageUrl: "/placeholder.svg?height=300&width=300", nickname: "Akshay" },
+  { id: "5", imageUrl: "/placeholder.svg?height=300&width=300", nickname: "Abhinav" },
+  { id: "6", imageUrl: "/placeholder.svg?height=300&width=300", nickname: "Soham" },
+];
 
 export default function VoteGrid() {
-  const [selectedDrawing, setSelectedDrawing] = useState<string | null>(null)
-  const [isSubmitting, setIsSubmitting] = useState(false)
-//   const { toast } = useToast()
+  const [selectedDrawing, setSelectedDrawing] = useState<string | null>(null);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const navigate = useNavigate();
+
+  const API_BASE_URL = "http://localhost:3000"; // Update with your actual backend URL
 
   const handleVote = async () => {
     if (!selectedDrawing) {
-    //   toast({
-    //     title: "Selection Required",
-    //     description: "Please select your favorite drawing before voting!",
-    //     variant: "destructive",
-    //   })
-      return
+      alert("Please select a drawing to vote!");
+      return;
     }
 
-    setIsSubmitting(true)
-    // Simulating an API call to submit the vote
-    await new Promise((resolve) => setTimeout(resolve, 1000))
-    setIsSubmitting(false)
+    const voter = localStorage.getItem("CurrentUser");
+    if (!voter) {
+      alert("Voter information missing. Please log in again.");
+      return;
+    }
 
-    // toast({
-    //   title: "Vote Submitted!",
-    //   description: `You voted for ${mockDrawings.find(d => d.id === selectedDrawing)?.artistName}'s drawing.`,
-    // })
-  }
+    setIsSubmitting(true);
+
+    try {
+      // Make POST request to submit the vote
+      console.log("voter is : ", voter)
+      console.log("submitting vote for", mockDrawings.find((drawing) => drawing.id === selectedDrawing)?.nickname)
+      const response = await axios.post(
+        `${API_BASE_URL}/vote`,
+        {
+          voter: voter, 
+          target: mockDrawings.find((drawing) => drawing.id === selectedDrawing)?.nickname, 
+        },
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
+
+      console.log("Vote submitted:", response.data);
+      navigate("/standings")
+    } catch (error) {
+      console.error("Error submitting vote:", error);
+      alert("Failed to submit the vote. Please try again.");
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
 
   return (
     <div className="min-h-screen bg-[#7E57C2] text-white p-6">
       {/* Header */}
       <div className="max-w-7xl mx-auto">
-      <Header/>
+        <Header />
 
         {/* Main Content */}
         <div className="space-y-8">
@@ -76,7 +97,7 @@ export default function VoteGrid() {
                 <div className="aspect-square relative">
                   <img
                     src={drawing.imageUrl}
-                    alt={`Drawing by ${drawing.artistName}`}
+                    alt={`Drawing by ${drawing.nickname}`}
                     className="w-full h-full object-cover"
                   />
                   {selectedDrawing === drawing.id && (
@@ -109,6 +130,5 @@ export default function VoteGrid() {
         </div>
       </div>
     </div>
-  )
+  );
 }
-

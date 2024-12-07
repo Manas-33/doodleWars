@@ -18,7 +18,9 @@ export default function GameLobby() {
   const [Staked, setStaked] = useState<boolean>(false);
 
   console.log("roomId: ", lobbyID);
+  localStorage.setItem("roomId", lobbyID);
   console.log("nickname: ", nickname);
+  localStorage.setItem("nickname", nickname);
 
   const handlePlayerUpdates = useCallback((updatedPlayers) => {
     console.log("Updated players", updatedPlayers);

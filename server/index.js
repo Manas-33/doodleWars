@@ -12,10 +12,64 @@ const io = new Server(server, {
     },
   });
 
-app.use(cors());
+  app.use(cors({
+    origin: "http://localhost:5173", 
+    methods: "POST, GET",
+    allowedHeaders: "Content-Type",
+  }));
+
+  app.use(express.json());
 
 // Store rooms and players
 const rooms = {};
+
+const voteData = {
+    votes: {}, 
+    voteCounts: {}, 
+};
+
+app.post("/vote", (req, res) => {
+    console.log("Printing request: ", req.body)
+    const { voter, target } = req.body;
+    
+    if (!voter || !target) {
+      return res
+        .status(400)
+        .json({ success: false, message: "Voter and target are required." });
+    }
+  
+    // Check if voter already voted for someone
+    if (voteData.votes[voter]) {
+      const previousTarget = voteData.votes[voter];
+      voteData.voteCounts[previousTarget]--; // Decrease vote count for previous target
+    }
+  
+    // Register the new vote
+    voteData.votes[voter] = target;
+  
+    // Increment the new target's vote count
+    if (!voteData.voteCounts[target]) {
+      voteData.voteCounts[target] = 0;
+    }
+    voteData.voteCounts[target]++;
+
+    console.log("Vote Data: ", voteData)
+  
+    return res.json({
+      success: true,
+      message: `${voter} voted for ${target}.`,
+      voteCounts: voteData.voteCounts,
+    });
+  });
+  
+  app.get("/votes", (req, res) => {
+    return res.json({
+      success: true,
+      voteCounts: voteData.voteCounts,
+      votes: voteData.votes,
+    });
+  });
+  
 
 io.on("connection", (socket) => {
   console.log(`User connected: ${socket.id}`);
