@@ -13,20 +13,56 @@ import {
 } from "@/components/ui/select";
 import Slider from "@/components/Slider";
 import Footer from "@/components/Footer";
+import { io } from "socket.io-client";
+const socket = io("http://localhost:3000");
 
 export default function Home() {
   const [nickname, setNickname] = useState("");
-  const [players, setPlayers] = useState("3");
+  const [players, setPlayers] = useState("2");
+  const [gameCode, setGameCode] = useState("");
+  const [error, setError] = useState("");
   const navigate = useNavigate();
 
-  const generateHexID = () => {
-    return Math.random().toString(16).substring(2, 8).toUpperCase();
+  // Player options for the dropdown
+  const playerOptions = ["2", "3", "4", "5", "6"];
+
+  // Function to create a new room
+  const handleCreateRoom = (e: React.FormEvent) => {
+    e.preventDefault();
+
+    if (!nickname) return setError("Nickname is required!");
+
+    socket.emit("createRoom", { nickname, maxPlayers: players }, (response) => {
+      if (response.success) {
+        console.log(`Room created successfully: ${response.roomId}`);
+        localStorage.setItem("roomId", response.roomId)
+        navigate("/lobby", { state: { lobbyID: response.roomId, nickname } });
+      } else {
+        setError(response.message);
+      }
+    });
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  // Function to join a room
+  const handleJoinRoom = (e: React.FormEvent) => {
     e.preventDefault();
-    const hexID = generateHexID();
-    navigate("/lobby", { state: { nickname, players, lobbyID: hexID } });
+
+    if (!gameCode || !nickname)
+      return setError("Both Game Code and Nickname are required!");
+    console.log("join room data :", gameCode)
+    console.log("join room data :", nickname)
+    socket.emit("joinRoom", { gameCode, nickname }, (response) => {
+      if (response.success) {
+        console.log(`Joined room successfully: ${gameCode}`);
+        localStorage.setItem("roomId" , gameCode)
+        console.log("Response join room : ", response)
+        navigate("/lobby", { state: { lobbyID: response.gameCode, nickname } });
+        // navigate("/lobby");
+      } else {
+        localStorage.setItem("roomId" , gameCode)
+        setError(response.message);
+      }
+    });
   };
 
   return (
@@ -52,7 +88,7 @@ export default function Home() {
       {/* Main Content */}
       <main className="flex-grow container mx-auto px-4 py-8 flex gap-8">
         <div className="flex-grow">
-          <Tabs defaultValue="start" className="w-full ">
+          <Tabs defaultValue="start" className="w-full">
             <TabsList className="w-full bg-transparent text-white my-2 gap-10">
               <TabsTrigger
                 value="start"
@@ -67,79 +103,50 @@ export default function Home() {
                 JOIN
               </TabsTrigger>
             </TabsList>
+
+            {/* Start Tab */}
             <TabsContent value="start" className="mt-8">
               <div className="flex flex-col items-center space-y-8">
-                <div className="relative">
-                  <img
-                    src="/photo1.png"
-                    alt="Character Avatar"
-                    width={150}
-                    height={150}
-                    className="rounded-full"
+                <h2 className="text-xl font-bold text-center">
+                  CHOOSE A CHARACTER <br /> AND A NICKNAME
+                </h2>
+                <form
+                  onSubmit={handleCreateRoom}
+                  className="space-y-4 w-full max-w-md"
+                >
+                  <Input
+                    type="text"
+                    placeholder="Enter nickname"
+                    value={nickname}
+                    onChange={(e) => setNickname(e.target.value)}
+                    required
                   />
-                  <button className="absolute bottom-0 right-0 bg-white rounded-full p-2">
-                    <svg
-                      className="w-6 h-6 text-purple-600"
-                      fill="none"
-                      stroke="currentColor"
-                      viewBox="0 0 24 24"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2}
-                        d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"
-                      />
-                    </svg>
-                  </button>
-                </div>
-                <div className="w-full max-w-md space-y-4">
-                  <h2 className="text-xl font-bold text-center">
-                    CHOOSE A CHARACTER
-                    <br />
-                    AND A NICKNAME
-                  </h2>
-                  <form onSubmit={handleSubmit}>
-                    <Input
-                      type="text"
-                      placeholder="Enter nickname"
-                      className="bg-white/20 border-none text-white placeholder:text-white/50"
-                      value={nickname}
-                      onChange={(e) => setNickname(e.target.value)}
-                      required
-                    />
-                    <div className="flex justify-center my-4">
-                      <Select
-                        onValueChange={(value) => setPlayers(value)}
-                        defaultValue={players}
-                      >
-                        <SelectTrigger className="w-[180px]">
-                          <SelectValue placeholder="Players" />
-                        </SelectTrigger>
-                        <SelectContent>
-                          <SelectItem value="3">3</SelectItem>
-                          <SelectItem value="4">4</SelectItem>
-                          <SelectItem value="5">5</SelectItem>
-                          <SelectItem value="6">6</SelectItem>
-                          <SelectItem value="7">7</SelectItem>
-                          <SelectItem value="8">8</SelectItem>
-                        </SelectContent>
-                      </Select>
-                    </div>
-                    <Button
-                      size="lg"
-                      type="submit"
-                      className="w-full bg-white text-purple-700 hover:bg-white/90"
-                    >
-                      START
-                    </Button>
-                  </form>
-                </div>
+                  <Select
+                    onValueChange={(value) => setPlayers(value)}
+                    defaultValue={players}
+                  >
+                    <SelectTrigger className="w-full">
+                      <SelectValue placeholder="Select Players" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {playerOptions.map((value) => (
+                        <SelectItem key={value} value={value}>
+                          {value} Players
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                  <Button size="lg" type="submit" className="w-full">
+                    START
+                  </Button>
+                </form>
               </div>
             </TabsContent>
+
+            {/* Join Tab */}
             <TabsContent value="join" className="mt-8">
               <div className="flex flex-col items-center space-y-8">
-                <div className="relative">
+              <div className="relative">
                   <img
                     src="/photo1.png"
                     alt="Character Avatar"
@@ -163,29 +170,32 @@ export default function Home() {
                     </svg>
                   </button>
                 </div>
-                <div className="flex flex-col items-center space-y-8">
-                  <h2 className="text-xl font-bold text-center">
-                    JOIN AN EXISTING GAME
-                  </h2>
-                  <p className="text-white/80">
-                    Enter the session ID provided by the host to join a game.
-                  </p>
-                  <form onSubmit={handleSubmit} className="w-full max-w-md">
-                    <Input
-                      type="text"
-                      placeholder="Enter game code"
-                      className="bg-white/20 border-none text-white placeholder:text-white/50"
-                      required
-                    />
-                    <Button
-                      size="lg"
-                      type="submit"
-                      className="w-full bg-white text-purple-700 hover:bg-white/90 mt-4"
-                    >
-                      JOIN
-                    </Button>
-                  </form>
-                </div>
+                <h2 className="text-xl font-bold text-center">
+                  JOIN AN EXISTING GAME
+                </h2>
+                <form
+                  onSubmit={handleJoinRoom}
+                  className="space-y-4 w-full max-w-md"
+                >
+                  <Input
+                    type="text"
+                    placeholder="Enter game code"
+                    value={gameCode}
+                    onChange={(e) => setGameCode(e.target.value)}
+                    required
+                  />
+                  <Input
+                    type="text"
+                    placeholder="Enter nickname"
+                    value={nickname}
+                    onChange={(e) => setNickname(e.target.value)}
+                    required
+                  />
+                  {error && <p className="text-red-500">{error}</p>}
+                  <Button size="lg" type="submit" className="w-full">
+                    JOIN
+                  </Button>
+                </form>
               </div>
             </TabsContent>
           </Tabs>
