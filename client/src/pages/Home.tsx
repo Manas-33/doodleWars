@@ -13,13 +13,10 @@ import {
 } from "@/components/ui/select";
 import Slider from "@/components/Slider";
 import Footer from "@/components/Footer";
-<<<<<<< Updated upstream
 import { io } from "socket.io-client";
 const socket = io("http://localhost:3000");
-=======
 import Header from "@/components/Header";
 import abi from '../abi/EthindiaContract.json';
->>>>>>> Stashed changes
 
 export default function Home() {
   const [nickname, setNickname] = useState("");
@@ -113,41 +110,14 @@ export default function Home() {
             {/* Start Tab */}
             <TabsContent value="start" className="mt-8">
               <div className="flex flex-col items-center space-y-8">
-                <h2 className="text-xl font-bold text-center">
-                  CHOOSE A CHARACTER <br /> AND A NICKNAME
-                </h2>
-                <form
-                  onSubmit={handleCreateRoom}
-                  className="space-y-4 w-full max-w-md"
-                >
-                  <Input
-                    type="text"
-                    placeholder="Enter nickname"
-                    value={nickname}
-                    onChange={(e) => setNickname(e.target.value)}
-                    required
+              <div className="relative">
+                  <img
+                    src="/photo1.png"
+                    alt="Character Avatar"
+                    width={150}
+                    height={150}
+                    className="rounded-full"
                   />
-<<<<<<< Updated upstream
-                  <Select
-                    onValueChange={(value) => setPlayers(value)}
-                    defaultValue={players}
-                  >
-                    <SelectTrigger className="w-full">
-                      <SelectValue placeholder="Select Players" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      {playerOptions.map((value) => (
-                        <SelectItem key={value} value={value}>
-                          {value} Players
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                  <Button size="lg" type="submit" className="w-full">
-                    START
-                  </Button>
-                </form>
-=======
                   <button className="absolute bottom-0 right-0 bg-white rounded-full p-2">
                     <svg
                       className="w-6 h-6 text-purple-600"
@@ -164,50 +134,40 @@ export default function Home() {
                     </svg>
                   </button>
                 </div>
-                <div className="w-full max-w-md space-y-4">
-                  <h2 className="text-xl font-bold text-center">
-                    CHOOSE A CHARACTER
-                    <br />
-                    AND A NICKNAME
-                  </h2>
-                  <form onSubmit={handleSubmit}>
-                    <Input
-                      type="text"
-                      placeholder="Enter nickname"
-                      className="bg-white/20 border-none text-white placeholder:text-white/50"
-                      value={nickname}
-                      onChange={(e) => setNickname(e.target.value)}
-                      required
-                    />
-                    <div className="flex justify-center my-4">
-                      <Select
-                        onValueChange={(value) => setPlayers(value)}
-                        defaultValue={players}
-                      >
-                        <SelectTrigger className="w-[180px]">
-                          <SelectValue placeholder="Players" />
-                        </SelectTrigger>
-                        <SelectContent>
-                          <SelectItem value="3">3</SelectItem>
-                          <SelectItem value="4">4</SelectItem>
-                          <SelectItem value="5">5</SelectItem>
-                          <SelectItem value="6">6</SelectItem>
-                          <SelectItem value="7">7</SelectItem>
-                          <SelectItem value="8">8</SelectItem>
-                        </SelectContent>
-                      </Select>
-                    </div>
-                    <Button
-                      size="lg"
-                      type="submit"
-                      onClick={CreateContractinstance}
-                      className="w-full bg-white text-purple-700 hover:bg-white/90"
-                    >
-                      Create Room
-                    </Button>
-                  </form>
-                </div>
->>>>>>> Stashed changes
+                <h2 className="text-xl font-bold text-center">
+                  CHOOSE A CHARACTER <br /> AND A NICKNAME
+                </h2>
+                <form
+                  onSubmit={handleCreateRoom}
+                  className="space-y-4 w-full max-w-md"
+                >
+                  <Input
+                  className='bg-white/20 border-none text-white placeholder:text-white/50'
+                    type="text"
+                    placeholder="Enter nickname"
+                    value={nickname}
+                    onChange={(e) => setNickname(e.target.value)}
+                    required
+                  />
+                  <Select
+                    onValueChange={(value) => setPlayers(value)}
+                    defaultValue={players}
+                  >
+                    <SelectTrigger className="w-full">
+                      <SelectValue placeholder="Select Players" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {playerOptions.map((value) => (
+                        <SelectItem key={value} value={value}>
+                          {value} Players
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                  <Button size="lg" type="submit" className="w-full bg-white text-purple-700 hover:bg-white/90">
+                    START
+                  </Button>
+                </form>
               </div>
             </TabsContent>
 
@@ -216,7 +176,7 @@ export default function Home() {
               <div className="flex flex-col items-center space-y-8">
               <div className="relative">
                   <img
-                    src="/photo1.png"
+                    src="/photo2.png"
                     alt="Character Avatar"
                     width={150}
                     height={150}
@@ -246,6 +206,7 @@ export default function Home() {
                   className="space-y-4 w-full max-w-md"
                 >
                   <Input
+                  className='bg-white/20 border-none text-white placeholder:text-white/50'
                     type="text"
                     placeholder="Enter game code"
                     value={gameCode}
@@ -253,6 +214,7 @@ export default function Home() {
                     required
                   />
                   <Input
+                  className='bg-white/20 border-none text-white placeholder:text-white/50'
                     type="text"
                     placeholder="Enter nickname"
                     value={nickname}
@@ -260,7 +222,7 @@ export default function Home() {
                     required
                   />
                   {error && <p className="text-red-500">{error}</p>}
-                  <Button size="lg" type="submit" className="w-full">
+                  <Button size="lg" type="submit" className="w-full bg-white text-purple-700 hover:bg-white/90">
                     JOIN
                   </Button>
                 </form>
