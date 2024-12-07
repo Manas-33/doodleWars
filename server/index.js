@@ -109,6 +109,36 @@ io.on("connection", (socket) => {
     callback({ success: true, gameCode });
   });
 
+  socket.on('vote', ({ voter, target }) => {
+    // Ensure voter and target are valid
+    console.log(`${voter} voted for ${target}`);
+    if (!voter || !target) {
+      socket.emit('error', 'Voter or target is invalid.');
+      return;
+    }
+
+    // Check if voter already voted
+    if (voteData.votes[voter]) {
+      const previousTarget = voteData.votes[voter];
+      voteData.voteCounts[previousTarget]--; 
+    }
+
+    // Register the new vote
+    voteData.votes[voter] = target;
+
+    // Increment vote count for the new target
+    if (!voteData.voteCounts[target]) {
+      voteData.voteCounts[target] = 0;
+    }
+    voteData.voteCounts[target]++;
+
+    // Broadcast updated vote results
+    io.emit('updateVoteResults', voteData.voteCounts);
+
+    console.log(`${voter} voted for ${target}`);
+  });
+
+
   // Disconnect
   socket.on("disconnect", () => {
     console.log(`User disconnected: ${socket.id}`);
