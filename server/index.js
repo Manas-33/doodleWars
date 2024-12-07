@@ -44,7 +44,9 @@ io.on("connection", (socket) => {
       return callback({ success: false, message: "Room is full" });
     }
 
-    room.players.push(nickname);
+    if (!room.players.includes(nickname)) {
+        room.players.push(nickname);
+    }
     socket.join(gameCode);
 
     console.log(`${nickname} joined room: ${gameCode}`);

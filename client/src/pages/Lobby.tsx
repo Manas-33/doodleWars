@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
@@ -18,6 +18,12 @@ export default function GameLobby() {
   console.log("roomId: ", lobbyID);
   console.log("nickname: ", nickname);
 
+  const handlePlayerUpdates = useCallback((updatedPlayers) => {
+    console.log("Updated players", updatedPlayers);
+    // Filter out any null players
+    setPlayers(updatedPlayers.filter(player => player != null));
+  }, []); 
+
   useEffect(() => {
     if (!lobbyID || !nickname) {
       console.log("Invalid lobby ID or nickname");
@@ -35,18 +41,14 @@ export default function GameLobby() {
     });
 
     // Listen for player updates and filter out null values
-    const handlePlayerUpdates = (updatedPlayers) => {
-      console.log("Updated players", updatedPlayers);
-      // Filter out any null players
-      setPlayers(updatedPlayers.filter(player => player != null));
-    };
 
     socket.on("updatePlayers", handlePlayerUpdates);
 
     return () => {
       socket.off("updatePlayers", handlePlayerUpdates); // Clean up the listener when the component unmounts
     };
-  }, [lobbyID, nickname, navigate]);
+  }, []);
+
 
   const handleBackClick = () => {
     navigate("/");
