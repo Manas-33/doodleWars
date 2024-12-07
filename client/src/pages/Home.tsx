@@ -15,7 +15,7 @@ import Slider from "@/components/Slider";
 import Footer from "@/components/Footer";
 import { io } from "socket.io-client";
 const socket = io("http://localhost:3000");
-import Header from "@/components/Header";
+import Header from "../components/Header";
 import abi from '../abi/EthindiaContract.json';
 
 export default function Home() {
@@ -31,7 +31,7 @@ export default function Home() {
   // Function to create a new room
   const handleCreateRoom = (e: React.FormEvent) => {
     e.preventDefault();
-
+    localStorage.setItem("CurrentUser",nickname);
     if (!nickname) return setError("Nickname is required!");
 
     socket.emit("createRoom", { nickname, maxPlayers: players }, (response) => {
@@ -48,7 +48,7 @@ export default function Home() {
   // Function to join a room
   const handleJoinRoom = (e: React.FormEvent) => {
     e.preventDefault();
-
+    localStorage.setItem("CurrentUser",nickname);
     if (!gameCode || !nickname)
       return setError("Both Game Code and Nickname are required!");
     console.log("join room data :", gameCode)
@@ -66,22 +66,6 @@ export default function Home() {
       }
     });
   };
-
-
-
-  const CreateContractinstance = async () => {
-    // const contractAddress = "0xd6fb14f70be051fca4b29576003fcb50d2c72c67";
-    // const contractabi = abi.abi;
-    // const provider = new ethers.providers.Web3Provider(window.ethereum);
-    // const signer = provider.getSigner();
-    
-    // const contractInstance = new ethers.Contract(contractAddress, contractabi, signer);
-    // console.log(contractInstance);
-
-
-
-
-  }
 
   return (
     <section className="h-[100vh] bg-[#6B46C1] bg-opacity-90 text-white flex flex-col">

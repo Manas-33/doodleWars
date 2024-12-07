@@ -13,9 +13,14 @@ interface Frame {
 }
 
 const AnimationTool: React.FC = () => {
+
+  const [UserName, setUserName] = useState("");
+
+
   const API_BASE_URL = "http://localhost:8000";
   // const API_BASE_URL = "https://3cc9-14-195-142-82.ngrok-free.app"
 
+  const usernameFromLocal = localStorage.getItem("CurrentUser");
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const [frames, setFrames] = useState<Frame[]>([{ id: 1, imageData: null }]);
   const [currentFrame, setCurrentFrame] = useState<number>(0);
@@ -135,7 +140,7 @@ const AnimationTool: React.FC = () => {
 
           try {
             const response = await axios.post(
-              `${API_BASE_URL}/buckets/string/files`,
+              `https://3cc9-14-195-142-82.ngrok-free.app/buckets/${usernameFromLocal}/files`,
               formData,
               {
                 headers: {
@@ -212,9 +217,8 @@ const AnimationTool: React.FC = () => {
               {colors.map((c) => (
                 <div
                   key={c}
-                  className={`w-8 h-8 rounded-full cursor-pointer transition-transform hover:scale-110 ${
-                    color === c ? "ring-4 ring-white" : ""
-                  }`}
+                  className={`w-8 h-8 rounded-full cursor-pointer transition-transform hover:scale-110 ${color === c ? "ring-4 ring-white" : ""
+                    }`}
                   style={{ backgroundColor: c }}
                   onClick={() => setColor(c)}
                 />
@@ -228,11 +232,10 @@ const AnimationTool: React.FC = () => {
                     variant="outline"
                     size="icon"
                     onClick={toolItem.action}
-                    className={`w-14 h-14 rounded-full transition-all duration-200 ${
-                      tool === toolItem.name
+                    className={`w-14 h-14 rounded-full transition-all duration-200 ${tool === toolItem.name
                         ? "bg-indigo-500 text-white border-indigo-500 shadow-lg"
                         : "bg-white/10 text-white hover:bg-white/20 hover:text-indigo-200 border-white/30"
-                    }`}
+                      }`}
                   >
                     {toolItem.icon}
                   </Button>

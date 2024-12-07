@@ -4,7 +4,8 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { ArrowLeft, Volume2 } from "lucide-react";
 import { io } from "socket.io-client";
-
+import { ethers } from 'ethers';
+import axios from 'axios';
 const socket = io("http://localhost:3000");
 
 export default function GameLobby() {
@@ -12,8 +13,9 @@ export default function GameLobby() {
   const navigate = useNavigate();
   console.log("Loacation state: ", location.state)
   const { lobbyID = "", nickname = "Player1" } = location.state || {};
-  
+
   const [players, setPlayers] = useState([]);
+  const [Staked, setStaked] = useState<boolean>(false);
 
   console.log("roomId: ", lobbyID);
   console.log("nickname: ", nickname);
@@ -22,12 +24,12 @@ export default function GameLobby() {
     console.log("Updated players", updatedPlayers);
     // Filter out any null players
     setPlayers(updatedPlayers.filter(player => player != null));
-  }, []); 
+  }, []);
 
   useEffect(() => {
     if (!lobbyID || !nickname) {
       console.log("Invalid lobby ID or nickname");
-      navigate("/"); 
+      navigate("/");
       return;
     }
 
@@ -40,12 +42,11 @@ export default function GameLobby() {
       }
     });
 
-    // Listen for player updates and filter out null values
 
     socket.on("updatePlayers", handlePlayerUpdates);
 
     return () => {
-      socket.off("updatePlayers", handlePlayerUpdates); // Clean up the listener when the component unmounts
+      socket.off("updatePlayers", handlePlayerUpdates);
     };
   }, []);
 
@@ -54,15 +55,40 @@ export default function GameLobby() {
     navigate("/");
   };
 
-  // const handleCopyClick = async () => {
-  //   try {
-  //     await navigator.clipboard.writeText(roomId + "");
-  //     setToastVisible(true);
-  //     setTimeout(() => setToastVisible(false), 4000);
-  //   } catch (err) {
-  //     console.error("Failed to copy text to clipboard", err);
-  //   }
-  // };
+
+  const stakeAmountinETH = async () => {
+
+    const DOOD_ABI = [
+      "function transfer(address to, uint256 amount) external returns (bool)",
+    ];
+
+    const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
+
+    const contractAddress = "0x07FCBd2412E0fFd9eaE62daBCC86D790f36161D5";
+    const actualContractAddress="0xd6fb14f70be051fca4b29576003fcb50d2c72c67"
+    const contractabi = DOOD_ABI;
+    const provider = new ethers.providers.Web3Provider(window.ethereum);
+    const signer = provider.getSigner();
+    const contractInstance = new ethers.Contract(contractAddress, contractabi, signer);
+
+    const tokenAmount = ethers.utils.parseUnits("10000", 18);
+
+    const tx=await contractInstance.transfer(actualContractAddress,tokenAmount.toString());
+    await tx.wait();
+
+    console.log("Tokens Staked Successfully");
+
+    if(tx){
+      setStaked(true)
+      const getUserName=localStorage.getItem("CurrentUser")
+      await axios.post(`https://3cc9-14-195-142-82.ngrok-free.app/buckets`,{ bucketName:`${getUserName}` }).then((res)=>{
+        console.log(res.data)
+      }).catch((err)=>{
+        console.log(`Error is Occured : ${err}`);
+      })                                                                              
+    }
+
+  }
 
   return (
     <div className="min-h-screen bg-[#6B46C1] bg-opacity-90 p-4">
@@ -99,17 +125,20 @@ export default function GameLobby() {
 
             {/* Player List */}
             <div className="space-y-2">
-            {players
-              .map((player, index) => (
-                <div
-                  key={index}
-                  className="flex items-center gap-3 bg-[#5B21B6] p-2 rounded-lg"
-                >
-                  <div className="w-10 h-10 bg-white rounded-full" />
-                  <span>{player}</span>
-                  
-                </div>
-              ))}
+              {players
+                .map((player, index) => (
+                  <div
+                    key={index}
+                    className="flex items-center gap-3 bg-[#5B21B6] p-2 rounded-lg"
+                  >
+                    <div className="w-10 h-10 bg-white rounded-full" />
+                    <span>{player}</span>
+
+                  {(player==localStorage.getItem("CurrentUser")) ?<>
+                    <Button style={{marginLeft:'30px'}} onClick={stakeAmountinETH}>Stake 10000 DOOD</Button>
+                  </>:<></>}
+                  </div>
+                ))}
             </div>
           </Card>
         </div>
@@ -118,24 +147,16 @@ export default function GameLobby() {
         <div className="flex justify-center gap-4 mt-8">
           <Button
             className="bg-white text-purple-900 hover:bg-gray-100"
-            // onClick={handleCopyClick}
+          // onClick={handleCopyClick}
           >
             COPY LOBBY ID
           </Button>
-          <Button className="bg-emerald-500 text-white hover:bg-emerald-600">
+          {Staked ?<Button onClick={navigate("/draw")} className="bg-emerald-500 text-white hover:bg-emerald-600">
             START
-          </Button>
+          </Button>:<><button>Please Stake</button></>}
         </div>
       </div>
 
-      {/* Toast Notification */}
-      {/* {toastVisible && (
-        <div className="fixed bottom-5 left-1/2 transform -translate-x-1/2 bg-green-600 text-white p-6 rounded-lg shadow-lg w-[300px] text-center">
-          <p className="text-lg font-semibold">
-            Lobby ID copied to the clipboard
-          </p>
-        </div>
-      )} */}
     </div>
   );
 }
