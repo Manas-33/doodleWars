@@ -14,6 +14,7 @@ interface Frame {
 
 const AnimationTool: React.FC = () => {
   const API_BASE_URL = "http://localhost:8000";
+  // const API_BASE_URL = "https://3cc9-14-195-142-82.ngrok-free.app"
 
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const [frames, setFrames] = useState<Frame[]>([{ id: 1, imageData: null }]);
@@ -130,7 +131,7 @@ const AnimationTool: React.FC = () => {
       canvas.toBlob(async (blob) => {
         if (blob) {
           const formData = new FormData();
-          formData.append("file", blob, `frame-${currentFrame + 1}.png`);
+          formData.append("file", blob, `frame-${currentFrame + 3}.png`);
 
           try {
             const response = await axios.post(
@@ -205,8 +206,8 @@ const AnimationTool: React.FC = () => {
     <div className="bg-gradient-to-br from-purple-700 to-indigo-800 min-h-screen">
       <Header />
       <main className="flex flex-col items-center justify-center w-full max-w-6xl mx-auto gap-10 px-4 py-8">
-        <div className="flex flex-col md:flex-row items-start gap-8 w-full">
-          <div className="flex flex-col bg-white/10 backdrop-blur-md p-6 rounded-lg shadow-lg w-full md:w-auto">
+        <div className="grid grid-cols-6 md:flex-row items-start gap-8 w-full">
+          <div className="col-span-2 bg-white/10 backdrop-blur-md p-6 rounded-lg shadow-lg w-full md:w-auto h-full">
             <div className="grid grid-cols-6 gap-4 mb-6">
               {colors.map((c) => (
                 <div
@@ -249,6 +250,12 @@ const AnimationTool: React.FC = () => {
                 className="w-full"
               />
             </div>
+            <Button
+              onClick={saveAsImage}
+              className="mt-4 bg-indigo-500 text-white hover:bg-indigo-600 transition-colors px-8 py-3 text-lg font-semibold rounded-full shadow-lg"
+            >
+              Submit
+            </Button>
           </div>
           <div className="flex-grow">
             <canvas
@@ -263,12 +270,6 @@ const AnimationTool: React.FC = () => {
             />
           </div>
         </div>
-        <Button
-          onClick={saveAsImage}
-          className="mt-4 bg-indigo-500 text-white hover:bg-indigo-600 transition-colors px-8 py-3 text-lg font-semibold rounded-full shadow-lg"
-        >
-          Submit
-        </Button>
       </main>
       <Footer />
     </div>
