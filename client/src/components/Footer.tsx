@@ -10,7 +10,7 @@ const Footer = () => {
                 <a
                   key={item}
                   href="#"
-                  className="text-sm hover:text-purple-200 transition-colors"
+                  className="text-sm text-white hover:text-purple-500 transition-colors"
                 >
                   {item}
                 </a>

@@ -1,40 +1,76 @@
-import { useState } from "react"
-import { Trophy, Users } from 'lucide-react'
-import { Button } from "@/components/ui/button"
-import { Card, CardContent } from "@/components/ui/card"
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
-import { Progress } from "@/components/ui/progress"
-import Header from "@/components/Header"
-import Footer from "@/components/Footer"
+import { useState } from "react";
+import { Trophy, Users } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent } from "@/components/ui/card";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Progress } from "@/components/ui/progress";
+import Header from "@/components/Header";
+import Footer from "@/components/Footer";
 
 interface Player {
-  id: string
-  name: string
-  avatar: string
-  votes: number
-  votedFor: string
+  id: string;
+  name: string;
+  avatar: string;
+  votes: number;
+  votedFor: string;
 }
 
 // Mock data - replace with actual data from your backend
 const mockPlayers: Player[] = [
-  { id: "1", name: "Artist 1", avatar: "/placeholder.svg?height=40&width=40", votes: 5, votedFor: "Artist 3" },
-  { id: "2", name: "Artist 2", avatar: "/placeholder.svg?height=40&width=40", votes: 2, votedFor: "Artist 1" },
-  { id: "3", name: "Artist 3", avatar: "/placeholder.svg?height=40&width=40", votes: 8, votedFor: "Artist 5" },
-  { id: "4", name: "Artist 4", avatar: "/placeholder.svg?height=40&width=40", votes: 3, votedFor: "Artist 3" },
-  { id: "5", name: "Artist 5", avatar: "/placeholder.svg?height=40&width=40", votes: 4, votedFor: "Artist 3" },
-  { id: "6", name: "Artist 6", avatar: "/placeholder.svg?height=40&width=40", votes: 1, votedFor: "Artist 1" },
-]
+  {
+    id: "1",
+    name: "Artist 1",
+    avatar: "/placeholder.svg?height=40&width=40",
+    votes: 5,
+    votedFor: "Artist 3",
+  },
+  {
+    id: "2",
+    name: "Artist 2",
+    avatar: "/placeholder.svg?height=40&width=40",
+    votes: 2,
+    votedFor: "Artist 1",
+  },
+  {
+    id: "3",
+    name: "Artist 3",
+    avatar: "/placeholder.svg?height=40&width=40",
+    votes: 8,
+    votedFor: "Artist 5",
+  },
+  {
+    id: "4",
+    name: "Artist 4",
+    avatar: "/placeholder.svg?height=40&width=40",
+    votes: 3,
+    votedFor: "Artist 3",
+  },
+  {
+    id: "5",
+    name: "Artist 5",
+    avatar: "/placeholder.svg?height=40&width=40",
+    votes: 4,
+    votedFor: "Artist 3",
+  },
+  {
+    id: "6",
+    name: "Artist 6",
+    avatar: "/placeholder.svg?height=40&width=40",
+    votes: 1,
+    votedFor: "Artist 1",
+  },
+];
 
 export default function ResultsPage() {
-  const [showVotingDetails, setShowVotingDetails] = useState(false)
+  const [showVotingDetails, setShowVotingDetails] = useState(false);
 
-  const sortedPlayers = [...mockPlayers].sort((a, b) => b.votes - a.votes)
-  const winner = sortedPlayers[0]
-  const totalVotes = mockPlayers.reduce((sum, player) => sum + player.votes, 0)
+  const sortedPlayers = [...mockPlayers].sort((a, b) => b.votes - a.votes);
+  const winner = sortedPlayers[0];
+  const totalVotes = mockPlayers.reduce((sum, player) => sum + player.votes, 0);
 
   return (
     <div className="min-h-screen bg-[#7E57C2] text-white p-6">
-        <Header/>
+      <Header />
       <div className="max-w-4xl mx-auto mt-5">
         <Card className="bg-white/10 border-white/20 mb-8">
           <CardContent className="p-6">
@@ -50,8 +86,11 @@ export default function ResultsPage() {
                 <AvatarFallback>{winner.name[0]}</AvatarFallback>
               </Avatar>
               <div>
-                <h3 className="text-xl font-bold">{winner.name}</h3>
-                <Progress value={(winner.votes / totalVotes) * 100} className="w-64 mt-2" />
+                <h3 className="text-xl  text-white font-bold">{winner.name}</h3>
+                <Progress
+                  value={(winner.votes / totalVotes) * 100}
+                  className="w-64 mt-2"
+                />
               </div>
             </div>
           </CardContent>
@@ -62,9 +101,14 @@ export default function ResultsPage() {
             <h2 className="text-2xl font-bold mb-4">All Results</h2>
             <div className="space-y-4">
               {sortedPlayers.map((player, index) => (
-                <div key={player.id} className="flex items-center justify-between">
+                <div
+                  key={player.id}
+                  className="flex items-center justify-between"
+                >
                   <div className="flex items-center space-x-3">
-                    <div className="text-lg font-semibold w-6">{index + 1}.</div>
+                    <div className="text-lg font-semibold w-6">
+                      {index + 1}.
+                    </div>
                     <Avatar>
                       <AvatarImage src={player.avatar} alt={player.name} />
                       <AvatarFallback>{player.name[0]}</AvatarFallback>
@@ -72,8 +116,13 @@ export default function ResultsPage() {
                     <div>{player.name}</div>
                   </div>
                   <div className="flex items-center space-x-4">
-                    <Progress value={(player.votes / totalVotes) * 100} className="w-32" />
-                    <div className="text-sm font-semibold w-16 text-right">{player.votes} votes</div>
+                    <Progress
+                      value={(player.votes / totalVotes) * 100}
+                      className="w-32"
+                    />
+                    <div className="text-sm font-semibold w-16  text-right">
+                      {player.votes} votes
+                    </div>
                   </div>
                 </div>
               ))}
@@ -98,7 +147,10 @@ export default function ResultsPage() {
             {showVotingDetails && (
               <div className="space-y-4">
                 {mockPlayers.map((player) => (
-                  <div key={player.id} className="flex items-center justify-between">
+                  <div
+                    key={player.id}
+                    className="flex items-center justify-between"
+                  >
                     <div className="flex items-center space-x-3">
                       <Avatar>
                         <AvatarImage src={player.avatar} alt={player.name} />
@@ -110,7 +162,10 @@ export default function ResultsPage() {
                       <div>voted for</div>
                       <Avatar>
                         <AvatarImage
-                          src={mockPlayers.find(p => p.name === player.votedFor)?.avatar}
+                          src={
+                            mockPlayers.find((p) => p.name === player.votedFor)
+                              ?.avatar
+                          }
                           alt={player.votedFor}
                         />
                         <AvatarFallback>{player.votedFor[0]}</AvatarFallback>
@@ -125,9 +180,8 @@ export default function ResultsPage() {
         </Card>
       </div>
       <div className="mt-4">
-      <Footer/>
+        <Footer />
       </div>
     </div>
-  )
+  );
 }
-
