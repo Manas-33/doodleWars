@@ -12,6 +12,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import Slider from "@/components/Slider";
+import Footer from "@/components/Footer";
 
 export default function Home() {
   const [nickname, setNickname] = useState("");
@@ -51,17 +52,17 @@ export default function Home() {
       {/* Main Content */}
       <main className="flex-grow container mx-auto px-4 py-8 flex gap-8">
         <div className="flex-grow">
-          <Tabs defaultValue="start" className="w-full">
-            <TabsList className="w-full bg-transparent border-b bg-purple-800 text-white">
+          <Tabs defaultValue="start" className="w-full ">
+            <TabsList className="w-full bg-transparent text-white my-2 gap-10">
               <TabsTrigger
                 value="start"
-                className="data-[state=active]:bg-purple-700 data-[state=active]:text-white"
+                className="bg-purple-300/80 border border-transparent data-[state=active]:bg-purple-700 data-[state=active]:text-white data-[state=active]:border-purple-500 p-3 px-20"
               >
                 START
               </TabsTrigger>
               <TabsTrigger
                 value="join"
-                className="data-[state=active]:bg-purple-700 data-[state=active]:text-white"
+                className="bg-purple-300/80 border border-transparent data-[state=active]:bg-purple-700 data-[state=active]:text-white data-[state=active]:border-purple-500 p-3 px-20"
               >
                 JOIN
               </TabsTrigger>
@@ -190,28 +191,11 @@ export default function Home() {
           </Tabs>
         </div>
 
-        <Slider/>
+        <Slider />
       </main>
 
       {/* Footer */}
-      <footer className="border-t border-white/20">
-        <div className="container mx-auto px-4 py-6 flex justify-between items-center">
-          <div className="flex space-x-6">
-            {["TERMS OF SERVICE", "PRIVACY", "ASSETS", "BLOG", "CONTACT"].map(
-              (item) => (
-                <a
-                  key={item}
-                  href="#"
-                  className="text-sm hover:text-purple-200 transition-colors"
-                >
-                  {item}
-                </a>
-              )
-            )}
-          </div>
-          <img src="/logo.png" alt="Logo" width={100} height={60} />
-        </div>
-      </footer>
+      <Footer />
     </section>
   );
 }

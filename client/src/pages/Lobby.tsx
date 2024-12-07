@@ -32,7 +32,7 @@ export default function GameLobby() {
   };
 
   return (
-    <div className="min-h-screen bg-[#6B46C1] p-4">
+    <div className="min-h-screen bg-[#6B46C1] bg-opacity-90 p-4">
       <div className="max-w-6xl mx-auto">
         {/* Header */}
         <div className="flex justify-between items-center mb-8">
