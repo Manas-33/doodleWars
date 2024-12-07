@@ -4,6 +4,7 @@ import { Slider } from "@/components/ui/slider"
 import { Pencil, Eraser, Undo, Redo } from 'lucide-react';
 import 'canvas-to-blob';
 import Header from '@/components/Header';
+import axios from 'axios'; 
 
 interface Frame {
   id: number;
@@ -11,6 +12,8 @@ interface Frame {
 }
 
 const AnimationTool: React.FC = () => {
+  const API_BASE_URL = 'http://localhost:8000';
+
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const [frames, setFrames] = useState<Frame[]>([{ id: 1, imageData: null }]);
   const [currentFrame, setCurrentFrame] = useState<number>(0);
@@ -139,14 +142,26 @@ const stopDrawing = () => {
   const saveAsImage = () => {
     const canvas = canvasRef.current;
     if (canvas) {
-      canvas.toBlob((blob) => {
+      canvas.toBlob(async (blob) => {
         if (blob) {
-          const url = URL.createObjectURL(blob);
-          const link = document.createElement('a');
-          link.href = url;
-          link.download = `frame-${currentFrame + 1}.png`;
-          link.click();
-          URL.revokeObjectURL(url);
+          const formData = new FormData();
+          formData.append('file', blob, `frame-${currentFrame + 1}.png`);
+
+          try {
+            const response = await axios.post(
+              `${API_BASE_URL}/buckets/string/files`, 
+              formData,
+              {
+                headers: {
+                
+                  'Content-Type': 'multipart/form-data',
+                },
+              }
+            );
+            console.log('File uploaded successfully:', response.data);
+          } catch (error) {
+            console.error('Error uploading file:');
+          }
         }
       }, 'image/png');
     }
