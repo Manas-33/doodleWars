@@ -10,6 +10,8 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@coinbase/coinbase-sdk": "^0.11.2",
+    "@coinbase/onchainkit": "^0.35.8",
     "@radix-ui/react-avatar": "^1.1.1",
     "@radix-ui/react-progress": "^1.1.0",
     "@radix-ui/react-select": "^2.1.2",
@@ -17,19 +19,23 @@
     "@radix-ui/react-slot": "^1.1.0",
     "@radix-ui/react-tabs": "^1.1.1",
     "@radix-ui/react-toast": "^1.2.2",
+    "@react-oauth/google": "^0.12.1",
     "axios": "^1.7.9",
     "canvas-to-blob": "^1.0.0",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
+    "ethers": "^5.0.0",
     "ethindia": "file:",
     "framer-motion": "^11.13.1",
     "lucide-react": "^0.468.0",
+    "okto-sdk-react": "^0.1.6",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
     "react-router-dom": "^7.0.2",
-    "socket.io-client": "^4.8.1",
     "tailwind-merge": "^2.5.5",
-    "tailwindcss-animate": "^1.0.7"
+    "tailwindcss-animate": "^1.0.7",
+    "viem": "^2.21.54",
+    "wagmi": "^2.13.4"
   },
   "devDependencies": {
     "@eslint/js": "^9.15.0",
