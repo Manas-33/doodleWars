@@ -15,6 +15,7 @@ const mockDrawings = [
   { id: 5, nickname: "Abhinav", imageUrl: "/path/to/image3.jpg" },
 ];
 
+
 export default function VotingPage() {
   const [selectedDrawing, setSelectedDrawing] = useState<number | null>(null);
   const [voteData, setVoteData] = useState<{ voteCounts: Record<string, number>; votes: Record<string, string> }>({
@@ -22,12 +23,33 @@ export default function VotingPage() {
     votes: {},
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [players, setPlayers] = useState([]);
   const navigate = useNavigate();
+  const gameCode = localStorage.getItem("roomId");
+
+  useEffect(() => {
+    const socket = io("http://localhost:3000");
+    // Emit the event to fetch the players
+    socket.emit("getPlayers", gameCode, (response) => {
+        console.log("Response from get players: ", response)
+        console.log("List of players: ", response.players)
+        setPlayers(response.players); 
+    });
+
+    // Listen for any updates to players in real-time
+    socket.on("updatePlayers", (updatedPlayers) => {
+      setPlayers(updatedPlayers);
+    });
+
+    // Clean up the listener
+    return () => {
+      socket.off("updatePlayers");
+    };
+  }, [gameCode]);
 
   // Establish socket connection
   useEffect(() => {
     const socket = io("http://localhost:3000");
-
     // Listen for vote update events
     socket.on("updateVoteResults", (updatedVoteCounts: Record<string, number>) => {
       setVoteData((prevVoteData) => ({

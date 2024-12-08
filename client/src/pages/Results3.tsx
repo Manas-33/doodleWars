@@ -3,7 +3,7 @@ import io from "socket.io-client"; // Import Socket.IO client
 import axios from "axios";
 import Header from "@/components/Header";
 import { Card, CardContent } from "@/components/ui/card";
-import { Trophy } from "lucide-react";
+import { RefreshCw, Trophy } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "@radix-ui/react-avatar";
 import { Progress } from "@radix-ui/react-progress";
 import Footer from "@/components/Footer";
@@ -16,7 +16,8 @@ interface VoteData {
 const socket = io("http://localhost:3000"); // Connect to the Socket.IO server
 
 export default function Results3() {
-    const [voteCounts, setVoteCounts] = useState<Record<string, number>>({}); 
+    const [voteCounts, setVoteCounts] = useState<Record<string, number>>({});
+    const [isComplete, setIsComplete] = useState(false); 
   
     useEffect(() => {
       // Listen for real-time vote updates
@@ -35,6 +36,10 @@ export default function Results3() {
     // Early return if no data
     if (!Object.keys(voteCounts).length) {
       return <div>Loading...</div>;
+    }
+
+    if(Object.keys(voteCounts).length == 4){
+        setIsComplete(true);
     }
   
     // Sort players based on votes
@@ -107,7 +112,14 @@ export default function Results3() {
               </div>
             </CardContent>
           </Card>
-          
+          {isComplete ? (
+                "All members have voted!!"
+              ) : (
+                <>
+                  <RefreshCw className="mr-2 h-4 w-4 animate-spin" />
+                  HANG ON!! WHILE OTHERS ARE VOTING...
+                </>
+            )}
         </div>
         <div className="mt-4">
           <Footer />
